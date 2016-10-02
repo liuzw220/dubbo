@@ -9,6 +9,7 @@
 		<module>liuzw-service</module>
 		<module>liuzw-manager</module>
 		<module>liuzw-web</module>
+		<module>liuzw-framework</module>
 	</modules>
 
 	<!-- 集中定义依赖版本号 -->
@@ -19,6 +20,7 @@
 		<mybatis.spring.version>1.2.2</mybatis.spring.version>
 		<mybatis.paginator.version>1.2.15</mybatis.paginator.version>
 		<mysql.version>5.1.32</mysql.version>
+		<bonecp.spring.version>0.8.0.RELEASE</bonecp.spring.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<jackson.version>2.4.2</jackson.version>
 		<druid.version>1.0.9</druid.version>
@@ -114,7 +116,11 @@
 				<artifactId>mysql-connector-java</artifactId>
 				<version>${mysql.version}</version>
 			</dependency>
-
+			<dependency>
+			<groupId>com.jolbox</groupId>
+			<artifactId>bonecp-spring</artifactId>
+			<version>${bonecp.spring.version}</version>
+		</dependency>
 			<!-- 日志相关 -->
 			<!-- slf4j -->
 			<dependency>
