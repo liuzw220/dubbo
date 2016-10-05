@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuzw.core.test.mapper.UserMapper">
+	<select id="query" resultType="com.liuzw.core.test.pojo.User">
+		select * from tb_user
+	</select>
+	<insert id="save">
+		insert into tb_user (
+		id,user_name,password,name,age,sex,birthday,created,updated )
+		values (
+		null, #{userName}, #{password}, #{name}, #{age},
+		#{sex}, #{birthday},
+		NOW(), NOW()
+		);
+	</insert>
+	<delete id="deleteById">
+		delete from tb_user where id=#{id}
+	</delete>
+	<update id="update">
+		update tb_user set user_name=#{userName},
+		password=#{password}, name=#{name},
+		age=#{age}, sex=#{sex},
+		birthday=#{birthday}, created=NOW(),
+		updated=NOW() where id=#{id}
+	</update>
+</mapper>
