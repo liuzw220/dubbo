@@ -3,47 +3,22 @@ package com.liuzw.service.redis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
-public class RedisService {
-
-	private ShardedJedisPool shardedJedisPool;
-
+public class RedisService extends BaseRedis {
 	public RedisService() {
 		super();
 	}
 	public RedisService(ShardedJedisPool shardedJedisPool) {
-		super();
-		this.shardedJedisPool = shardedJedisPool;
-	}
-	public void setShardedJedisPool(ShardedJedisPool shardedJedisPool) {
-		this.shardedJedisPool = shardedJedisPool;
-	}
-
-	private <T> T execute(Function<ShardedJedis, T> fun) {
-		ShardedJedis shardedJedis = null;
-		try {
-			// 从连接池中获取到jedis分片对象
-			shardedJedis = shardedJedisPool.getResource();
-			return fun.callBack(shardedJedis);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (null != shardedJedis) {
-				// 关闭，检测连接是否有效，有效则放回到连接池中，无效则重置状态
-				shardedJedis.close();
-			}
-		}
-		return null;
-	}
+		super(shardedJedisPool);
+	} 
 
 	/**
-	 * 执行set方法
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
+	 * 向redis缓存中添加一个对象
+	 * @param key 对象名称
+	 * @param value 对象值
+	 * @return 返回
 	 */
 	public String set(final String key, final String value) {
-		return this.execute(new Function<ShardedJedis, String>() {
+		return this.execute(new IRedisFunction<ShardedJedis, String>() {
 			@Override
 			public String callBack(ShardedJedis shardedJedis) {
 				return shardedJedis.set(key, value);
@@ -52,15 +27,14 @@ public class RedisService {
 	}
 
 	/**
-	 * 执行set方法,并且设置生存时间
-	 * 
-	 * @param key
-	 * @param value
-	 * @param seconds 时间，单位是：秒
-	 * @return
+	 * 向redis缓存中添加一个对象并同时设置过期时间
+	 * @param key 对象名称
+	 * @param value 对象值
+	 * @param seconds 过期时间
+	 * @return 返回
 	 */
 	public String set(final String key, final String value, final Integer seconds) {
-		return this.execute(new Function<ShardedJedis, String>() {
+		return this.execute(new IRedisFunction<ShardedJedis, String>() {
 			@Override
 			public String callBack(ShardedJedis shardedJedis) {
 				String str = shardedJedis.set(key, value);
@@ -70,48 +44,18 @@ public class RedisService {
 		});
 	}
 
-	/**
-	 * 执行get方法
-	 * 
-	 * @param key
-	 * @return
-	 */
+	 /**
+     * 向redis缓存中获取一个对象
+     * @param key 对象的键
+     * @return 对象
+     */
 	public String get(final String key) {
-		return this.execute(new Function<ShardedJedis, String>() {
+		return this.execute(new IRedisFunction<ShardedJedis, String>() {
 			@Override
-			public String callBack(ShardedJedis e) {
-				return e.get(key);
+			public String callBack(ShardedJedis shardedJedis) {
+				return shardedJedis.get(key);
 			}
 		});
 	}
 
-	/**
-	 * 删除key
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public Long del(final String key) {
-		return this.execute(new Function<ShardedJedis, Long>() {
-			@Override
-			public Long callBack(ShardedJedis e) {
-				return e.del(key);
-			}
-		});
-	}
-
-	/**
-	 * 设置生存时间
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public Long expire(final String key, final Integer seconds) {
-		return this.execute(new Function<ShardedJedis, Long>() {
-			@Override
-			public Long callBack(ShardedJedis e) {
-				return e.expire(key, seconds);
-			}
-		});
-	}
 }
