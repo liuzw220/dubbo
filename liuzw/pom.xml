@@ -11,6 +11,7 @@
 		<module>liuzw-web</module>
 		<module>liuzw-framework</module>
 	</modules>
+	
 
 	<!-- 集中定义依赖版本号 -->
 	<properties>
